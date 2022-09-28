@@ -43,6 +43,13 @@ const Users = db.define('users', {
         validate: {
             notEmpty: true
         }
+    },
+     blocked: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     }
 }, {
     freezeTableName: true
