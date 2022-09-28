@@ -1,15 +1,26 @@
 import User from "../models/UserModel.js";
 import argon2 from "argon2";
+import blockUser  from './Users.js'
 
 export const Login = async (req, res) =>{
+    
     const user = await User.findOne({
         where: {
             email: req.body.email
         }
     });
+    console.log(user)
     if(!user) return res.status(404).json({msg: "Sorry! user not found"});
+    
     const match = await argon2.verify(user.password, req.body.password);
-    if(!match) return res.status(400).json({msg: "Wrong Password"});
+    while(!match) {
+       
+        if(user.countLogs >=3){
+        return res.status(400).json({msg: "Account blocked"})
+    }
+        return res.status(400).json({msg: "Wrong Password"})
+    };
+    
     req.session.userId = user.uid;
     const uid = user.uid;
     const name = user.name;
