@@ -75,6 +75,16 @@ export const updateUser = async(req, res) =>{
     }
 }
 
+export const blockUser = async (req, res) => {
+	const { blocked } = req.body;
+	try {
+		await Users.findOneAndUpdate({ _id: req.params.id }, { blocked: blocked });
+		res.status(201).json({ message: 'user status updated' });
+	} catch (error) {
+		res.status(501).json({ success: false, message: error.message });
+	}
+};
+
 export const deleteUser = async(req, res) =>{
     const user = await User.findOne({
         where: {
